@@ -1,0 +1,8 @@
+environment{
+  APPLICATION_NAME = '${APPLICATION_NAME}'
+  BUILD_METHOD = '${BUILD_METHOD}'
+  BUILD_LANGUAGE = '${BUILD_LANGUAGE}'
+}
+stages{
+  stage{}
+}
