@@ -1,0 +1,4 @@
+#!/usr/bin/env groovy
+def call(Map config = [:]){
+	step([$class: 'CxScanBuilder', serverUrl: '${CHECKMARX_URL}', projectName: '${APPLICATION_NAME}', waitFprResultsEnabled: true, vulnerabilityThresholdResult: 'Failure'])
+}
