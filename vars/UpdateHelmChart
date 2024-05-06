@@ -1,0 +1,14 @@
+#!/usr/bin/env groovy
+def CodeDeploymnet(){
+	CreateUpdateConfigMap()
+	CreateService()
+	CreateRoute()
+	CreateUpdateDeployment()
+}
+def CreateUpdateDeployment(){
+	git branch: master, url: 'GIT_URL'
+	CreateUpdateDeployment = readYaml file: "${ENVIRONMENT_NAME}.yaml"
+	if (CreateUpdateDeployment.global.containsKey("releaseversion")){
+		CreateUpdateDeployment.global.put("releaseversion": '${RELEASE_VERSION}')
+	}
+}
