@@ -1,10 +1,10 @@
-FROM
-WORKDIR
-RUN
-RUN
+FROM "${BUILD_IMAGE}" as build
+WORKDIR /app
+RUN git clone "${APP_GIT_URL}"
+RUN mvn clean build
 
-FROM
-COPY
-RUN
+FROM "${RUNTIME_IMAGE}"
+COPY --from=build /app/application.jar /app/application.jar
+RUN chmod 755 /app
 
-ENTRYPOINT
+ENTRYPOINT["java", "-jar", "/app/application.jar"]
