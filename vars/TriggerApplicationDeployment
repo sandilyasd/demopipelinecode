@@ -1,0 +1,4 @@
+#!/usr/bin/env groovy
+def call(Map config = [:]){
+	sh "curl --request POST -k --url '${JENKINS_URL}'/job/'${APPLICAION_NAME}/job/'${BUILD_METHOD}'/builWithParameters?APPLICAION_NAME=${APPLICAION_NAME}&HELM_URL=$HELM_URL --user ${USER}:${PASSWORD}"
+}
