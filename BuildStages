@@ -1,8 +1,68 @@
-environment{
-  APPLICATION_NAME = '${APPLICATION_NAME}'
-  BUILD_METHOD = '${BUILD_METHOD}'
-  BUILD_LANGUAGE = '${BUILD_LANGUAGE}'
-}
-stages{
-  stage{}
+library 'demo-library'
+pipeline{
+	agent none
+	environment{
+		APPLICATION_NAME = '${APPLICATION_NAME}'
+		BUILD_METHOD = '${BUILD_METHOD}'
+		BUILD_LANGUAGE = '${BUILD_LANGUAGE}'
+	}
+	stages{
+		stage("Unit Testing")
+			agent{
+				label "unittesting"
+			}
+			when{
+				expression{( "${BUILD_METHOD)" == "CodeDeployment") }
+			}
+			steps{
+				script{
+					ExecuteUnitTesting()
+				}
+			}
+		}
+		stage("Static Code Analysis"){
+			when{
+				expression{( "${BUILD_METHOD)" == "CodeDeployment") }
+			}
+			parallel{
+				stage("Sonarqube"){
+					agent{ label "sonar"}
+					steps{
+						script{
+							ExecuteSonarAnalysis()
+						}
+					}
+				}
+				stage("checkmarx"){
+					agent{ label "sast"}
+					steps{
+						script{
+							ExecuteSast()
+						}
+					}					
+				}
+			}
+		}
+		stage("Build"){
+			agent{
+				label any
+			}
+			when{
+				expression{( "${BUILD_METHOD)" == "CodeDeployment") }
+			}
+			steps{
+				script{
+					BuildDockerImage()
+				}
+			}		
+		}
+		stage("Deployment"){
+			agent{label any}
+			steps{
+				script{
+					TriggerApplicationDeployment()
+				}
+			}
+		}
+	}
 }
