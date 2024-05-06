@@ -1,0 +1,8 @@
+#!/usr/bin/env groovy
+def call(Map config = [:]){
+	if("${BUILD_LANGUAGE}" == "spring"){
+		sh "mvn test"
+	}else if("${BUILD_LANGUAGE}" == "angular"){
+		sh "ng test"
+	}
+}
