@@ -1,1 +1,17 @@
-Placeholder
+#!/usr/bin/env groovy
+def call(Map config = [:]){
+	if("${BUILD_LANGUAGE}" == "spring"){
+		BUILD_IMAGE = "spring-build"
+		RUNTIME_IMAGE = "spring-runtime"
+		DOCKERFILE = "spring"
+	}else if("${BUILD_LANGUAGE}" == "angular"){
+		BUILD_IMAGE = "angular-build"
+		RUNTIME_IMAGE = "angular-runtime"
+		DOCKERFILE = "angular"
+	}
+	echo "BUILD_IMAGE"
+	echo "RUNTIME_IMAGE"
+	sh "sudo docker build -t ${REGISTRY_URL}/${APPLICATION_NAME}:${RELEASE_VERSION} -f ./resources/dockerfiles/${DOCKERFILE} --build-arg BUILD_IMAGE='${BUILD_IMAGE}' --build-arg RUNTIME_IMAGE='${RUNTIME_IMAGE}' ."
+	sh "sudo docker login -u '${REGISTRY_USERNAME}' -p '${REGISTRY_PASSWORD}' '${REGISTRY_URL}'"
+	sh "sudo docker push ${REGISTRY_URL}/${APPLICATION_NAME}:${RELEASE_VERSION}"
+}
