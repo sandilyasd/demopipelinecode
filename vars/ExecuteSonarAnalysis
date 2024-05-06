@@ -1,0 +1,8 @@
+#!/usr/bin/env groovy
+def call(Map config = [:]){
+	if("${BUILD_LANGUAGE}" == "spring"){
+		sh "mvn verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$APPLICATION_NAME"
+	}else if("${BUILD_LANGUAGE}" == "angular"){
+		sh "sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$APPLICATION_NAME"
+	}
+}
